@@ -1,5 +1,9 @@
 const db = require('./../data/db-config.js');
 
-module.exports = {
+function getProjects() {
+  return db('projects');
+}
 
+module.exports = {
+  getProjects
 };

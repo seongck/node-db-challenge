@@ -24,7 +24,7 @@ router.get('/:id/resources', (req, res) => {
       res.json(resources); 
     })
     .catch(err => {
-      res.status(500).json({ message: 'Failed to get resources', error: err });
+      next({ message: 'Failed to get resources'});
     });
 });
 
@@ -40,7 +40,7 @@ router.get('/:id/tasks', (req, res) => {
       res.json(convertedTasks); 
     })
     .catch(err => {
-      res.status(500).json({ message: 'Failed to get tasks', error: err });
+      next({ message: 'Failed to get tasks' });
     });
 });
 

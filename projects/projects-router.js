@@ -47,10 +47,12 @@ router.get('/:id/tasks', (req, res, next) => {
 router.post('/', (req, res, next) => {
   const project = req.body;
 
+  if (project.hasOwnProperty('completed') === false) {
+    project.completed = 0;
+  }
+
   if( !project.name ) {
     next({ status: 422, message: 'Project name required' });
-  } else if (project.hasOwnProperty('completed') === false) {
-    next({ status: 422, message: 'Project completion status required' }); 
   } else {
     Projects.addProject(project)
       .then( ids => {
@@ -61,10 +63,11 @@ router.post('/', (req, res, next) => {
   }
 });
 
-router.post('/:id/resources', (req, res) => {
+router.post('/:id/resources', (req, res, next) => {
+  const resource = req.body;
 });
 
-router.post('/:id/tasks', (req, res) => {
+router.post('/:id/tasks', (req, res, next) => {
 });
 
 module.exports = router;

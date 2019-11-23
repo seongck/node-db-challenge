@@ -2,7 +2,7 @@ const express = require('express');
 const Projects = require('./projects-model.js');
 const router = express.Router();
 
-router.get('/', (req, res) => {
+router.get('/', (req, res, next) => {
   Projects.getProjects()
     .then( projects => {
       const convertedProjects = [...projects].map( project => {
@@ -12,11 +12,11 @@ router.get('/', (req, res) => {
       res.json(convertedProjects);
     })
     .catch( err => {
-      res.status(500).json({ message: 'Failed to get projects', error: err });
+      next({ message: 'Failed to get projects'});
     });
 });
 
-router.get('/:id/resources', (req, res) => {
+router.get('/:id/resources', (req, res, next) => {
   const { id } = req.params;
 
   Projects.getResources(id)
@@ -28,7 +28,7 @@ router.get('/:id/resources', (req, res) => {
     });
 });
 
-router.get('/:id/tasks', (req, res) => {
+router.get('/:id/tasks', (req, res, next) => {
   const { id } = req.params;
 
   Projects.getTasks(id)
@@ -44,7 +44,21 @@ router.get('/:id/tasks', (req, res) => {
     });
 });
 
-router.post('/', (req, res) => {
+router.post('/', (req, res, next) => {
+  const project = req.body;
+
+  if( !project.name ) {
+    next({ status: 422, message: 'Project name required' });
+  } else if (project.hasOwnProperty('completed') === false) {
+    next({ status: 422, message: 'Project completion status required' }); 
+  } else {
+    Projects.addProject(project)
+      .then( ids => {
+        (ids.length > 0)
+          ? res.json({ message: 'Project successfully added' })
+          : next({ message: 'Failed to add project' });
+      })
+  }
 });
 
 router.post('/:id/resources', (req, res) => {

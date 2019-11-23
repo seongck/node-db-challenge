@@ -19,7 +19,9 @@ function getTasks(project_id) {
     .where({ 'projects.id': project_id });
 }
 
-function addProject() {
+function addProject(project) {
+  return db('projects')
+    .insert(project);
 }
 
 function addResource(project_id) {
@@ -31,5 +33,6 @@ function addTask(project_id) {
 module.exports = {
   getProjects,
   getResources,
-  getTasks
+  getTasks,
+  addProject
 };

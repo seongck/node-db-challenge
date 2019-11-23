@@ -29,6 +29,19 @@ router.get('/:id/resources', (req, res) => {
 });
 
 router.get('/:id/tasks', (req, res) => {
+  const { id } = req.params;
+
+  Projects.getTasks(id)
+    .then( tasks => {
+      const convertedTasks = [...tasks].map( task => {
+        task.completed = Boolean(task.completed);
+        return task;
+      });
+      res.json(convertedTasks); 
+    })
+    .catch(err => {
+      res.status(500).json({ message: 'Failed to get tasks', error: err });
+    });
 });
 
 router.post('/', (req, res) => {

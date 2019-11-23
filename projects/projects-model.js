@@ -13,6 +13,10 @@ function getResources(project_id) {
 }
 
 function getTasks(project_id) {
+  return db('tasks')
+    .join('projects', 'projects.id', 'tasks.project_id')
+    .select('tasks.id', 'projects.name AS project_name', 'tasks.description AS task_description', 'tasks.notes AS task_notes', 'tasks.completed')
+    .where({ 'projects.id': project_id });
 }
 
 function addProject() {
@@ -26,5 +30,6 @@ function addTask(project_id) {
 
 module.exports = {
   getProjects,
-  getResources
+  getResources,
+  getTasks
 };

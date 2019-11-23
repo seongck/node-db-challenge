@@ -16,6 +16,29 @@ router.get('/', (req, res, next) => {
     });
 });
 
+router.get('/:id', (req, res, next) => {
+  const { id } = req.params;
+
+  Projects.getProject(id)
+    .then( project => {
+      const convertedProject = [...project].map( project => {
+        project.completed = Boolean(project.completed);
+        return project;
+      });
+      res.json(convertedProject);
+    });
+});
+
+router.get('/resources', (req, res, next) => {
+  Projects.getAllResources()
+    .then(resources => {
+      res.json(resources);
+    })
+    .catch( err => {
+      next({ message: err });
+    });
+});
+
 router.get('/:id/resources', (req, res, next) => {
   const { id } = req.params;
 
@@ -44,6 +67,8 @@ router.get('/:id/tasks', (req, res, next) => {
     });
 });
 
+
+
 router.post('/', (req, res, next) => {
   const project = req.body;
 
@@ -63,11 +88,49 @@ router.post('/', (req, res, next) => {
   }
 });
 
-router.post('/:id/resources', (req, res, next) => {
+router.post('/resources', (req, res, next) => {
   const resource = req.body;
+
+  if( !resource.name ) {
+    next({ status: 422, message: 'Resource name required' });
+  } else {
+    Projects.addResource(resource)
+      .then( ids => {
+        (ids.length > 0)
+          ? res.json({ message: 'Resource successfully added' })
+          : next({ message: 'Failed to add resource' });
+      })
+  }
+
 });
 
 router.post('/:id/tasks', (req, res, next) => {
+  const { id } = req.params;
+  const task = req.body;
+  task.project_id = id;
+
+  if (task.hasOwnProperty('completed') === false) {
+    task.completed = 0;
+  }
+
+  if( !task.description) {
+    next({ status: 422, message: 'Task description required' });
+  } else {
+    Projects.addTask(id, task)
+      .then( ids => {
+        ( ids.length > 0)
+          ? res.json({ message: 'Task successfully added' })
+          : next({ message: 'Failed to add task' });
+      });
+  }
 });
 
 module.exports = router;
+
+
+
+
+
+
+
+

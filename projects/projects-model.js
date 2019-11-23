@@ -19,20 +19,42 @@ function getTasks(project_id) {
     .where({ 'projects.id': project_id });
 }
 
+function getAllResources() {
+  return db('resources');
+}
+
+function getProject(id) {
+  return db('projects')
+    .where({ 'projects.id': id });
+}
+
 function addProject(project) {
   return db('projects')
     .insert(project);
 }
 
-function addResource(project_id) {
+function addResource(resource) {
+  return db('resources')
+    .insert(resource);
 }
 
-function addTask(project_id) {
+async function addTask(id, task) {
+  const project = await getProject(id);
+  if( project.length === 0 ) {
+    return [];
+  } else {
+    return db('tasks')
+      .insert(task);
+  }
 }
 
 module.exports = {
   getProjects,
   getResources,
   getTasks,
-  addProject
+  getAllResources,
+  getProject,
+  addProject,
+  addResource,
+  addTask
 };

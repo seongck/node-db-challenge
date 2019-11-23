@@ -16,4 +16,28 @@ router.get('/', (req, res) => {
     });
 });
 
+router.get('/:id/resources', (req, res) => {
+  const { id } = req.params;
+
+  Projects.getResources(id)
+    .then( resources => {
+      res.json(resources); 
+    })
+    .catch(err => {
+      res.status(500).json({ message: 'Failed to get resources', error: err });
+    });
+});
+
+router.get('/:id/tasks', (req, res) => {
+});
+
+router.post('/', (req, res) => {
+});
+
+router.post('/:id/resources', (req, res) => {
+});
+
+router.post('/:id/tasks', (req, res) => {
+});
+
 module.exports = router;

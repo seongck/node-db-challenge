@@ -20,6 +20,7 @@ function getTasks(project_id) {
 }
 
 function getAllResources() {
+  console.log('Inside get all resources');
   return db('resources');
 }
 

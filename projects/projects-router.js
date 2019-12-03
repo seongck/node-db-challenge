@@ -16,7 +16,7 @@ router.get('/', (req, res, next) => {
     });
 });
 
-router.get('/:id', (req, res, next) => {
+router.get('/:id/project', (req, res, next) => {
   const { id } = req.params;
 
   Projects.getProject(id)
@@ -126,11 +126,4 @@ router.post('/:id/tasks', (req, res, next) => {
 });
 
 module.exports = router;
-
-
-
-
-
-
-
 
